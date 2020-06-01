@@ -4,6 +4,7 @@ import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from "type-graphql";
 import { UserResolver } from "./UserResolver";
 import { createConnection } from "typeorm";
+import "./utils/config.ts";
 
 
 (async () => {
@@ -18,7 +19,7 @@ import { createConnection } from "typeorm";
         schema: await buildSchema({
             resolvers: [UserResolver]
         })
-    }); 
+    });
 
     apolloServer.applyMiddleware({ app });
 

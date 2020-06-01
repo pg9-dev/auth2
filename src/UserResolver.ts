@@ -2,6 +2,7 @@ import { Resolver, Query, Mutation, Arg, ObjectType, Field } from 'type-graphql'
 import { hash, compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import { User } from './entity/User';
+import "./utils/config.ts";
 
 @ObjectType()
 class LoginResponse {
@@ -60,8 +61,9 @@ export class UserResolver {
             throw new Error("password not valid")
         }
 
+
         return {
-            accessToken: sign({ userId: user.id }, "12121212", { expiresIn: "15m" })
+            accessToken: sign({ userId: user.id }, "a" , { expiresIn: "15m" })
         };
     }
 }
