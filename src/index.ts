@@ -18,7 +18,8 @@ import "./utils/config.ts";
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
             resolvers: [UserResolver]
-        })
+        }),
+        context: ({req, res}) => ({req, res})
     });
 
     apolloServer.applyMiddleware({ app });
