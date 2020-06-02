@@ -1,17 +1,20 @@
+import "dotenv/config"
 import "reflect-metadata";
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from "type-graphql";
 import { UserResolver } from "./UserResolver";
 import { createConnection } from "typeorm";
-import "./utils/config.ts";
 
 
 (async () => {
     const app = express();
     app.get("/", (_, res) => {
         res.send("hello")
-    });
+    }); 
+
+    console.log(process.env.ACCESS_TOKEN_SECRET)
+
 
     await createConnection();
 
@@ -24,7 +27,7 @@ import "./utils/config.ts";
 
     apolloServer.applyMiddleware({ app });
 
-    app.listen(4000, () => {
+    app.listen(8000, () => {
         console.log("express server started");
     });
 })();
