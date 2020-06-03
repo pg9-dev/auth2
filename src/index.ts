@@ -13,9 +13,6 @@ import { createConnection } from "typeorm";
         res.send("hello")
     }); 
 
-    console.log(process.env.ACCESS_TOKEN_SECRET)
-
-
     await createConnection();
 
     const apolloServer = new ApolloServer({
