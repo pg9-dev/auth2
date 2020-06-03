@@ -7,6 +7,7 @@ import {
   Field,
   Ctx,
   UseMiddleware,
+  Int, 
 } from "type-graphql";
 import { hash, compare } from "bcryptjs";
 import { User } from "./entity/User";
@@ -14,6 +15,8 @@ import "./utils/config.ts";
 import { ContextType } from "./ContextType";
 import { createAccessToken, createRefreshToken } from "./auth";
 import { isAuth } from "./isAuth";
+import { sendRefreshToken } from "./sendRefreshToken";
+import { getConnection } from "typeorm";
 
 @ObjectType()
 class LoginResponse {
@@ -78,16 +81,19 @@ export class UserResolver {
       throw new Error("password not valid");
     }
 
-    res.cookie(
-      "jid",
-      createRefreshToken(user),
-      {
-        httpOnly: true,
-      }
-    );
+    sendRefreshToken(res, createRefreshToken(user));
 
     return {
       accessToken: createAccessToken(user),
     };
   }
+
+  @Mutation(() => Boolean)
+  async revokeRefreshTokenForUser(
+    @Arg('userId', () => Int) userId: number
+  ) {
+    await getConnection().getRepository(User).increment({id: userId}, "tokenVersion", 1);
+    return true; 
+  }
+
 }
