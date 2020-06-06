@@ -7,7 +7,7 @@ import {
   Field,
   Ctx,
   UseMiddleware,
-  Int, 
+  Int,
 } from "type-graphql";
 import { hash, compare } from "bcryptjs";
 import { User } from "./entity/User";
@@ -17,6 +17,7 @@ import { createAccessToken, createRefreshToken } from "./auth";
 import { isAuth } from "./isAuth";
 import { sendRefreshToken } from "./sendRefreshToken";
 import { getConnection } from "typeorm";
+import { verify } from "jsonwebtoken";
 
 @ObjectType()
 class LoginResponse {
@@ -33,7 +34,7 @@ export class UserResolver {
 
   @Query(() => String)
   @UseMiddleware(isAuth)
-  bye(@Ctx() {payload}: ContextType) {
+  bye(@Ctx() { payload }: ContextType) {
     console.log(payload);
     return `This is user ${JSON.stringify(payload)}`;
   }
@@ -41,6 +42,24 @@ export class UserResolver {
   @Query(() => [User])
   users() {
     return User.find();
+  }
+
+  @Query(() => User, { nullable: true })
+  me(@Ctx() context: ContextType) {
+    const authorization = context.req.headers["authorization"];
+
+    if (!authorization) {
+      return null;
+    }
+
+    try {
+      const token = authorization.split(" ")[1];
+      const verified: any = verify(token, process.env.ACCESS_TOKEN_SECRET!);
+      return User.findOne(verified.userId);
+    } catch (err) {
+      console.log(err);
+      return null;
+    } 
   }
 
   @Mutation(() => Boolean)
@@ -89,11 +108,10 @@ export class UserResolver {
   }
 
   @Mutation(() => Boolean)
-  async revokeRefreshTokenForUser(
-    @Arg('userId', () => Int) userId: number
-  ) {
-    await getConnection().getRepository(User).increment({id: userId}, "tokenVersion", 1);
-    return true; 
+  async revokeRefreshTokenForUser(@Arg("userId", () => Int) userId: number) {
+    await getConnection()
+      .getRepository(User)
+      .increment({ id: userId }, "tokenVersion", 1);
+    return true;
   }
-
 }
