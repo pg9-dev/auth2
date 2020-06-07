@@ -23,6 +23,9 @@ import { verify } from "jsonwebtoken";
 class LoginResponse {
   @Field()
   accessToken: string;
+
+  @Field()
+  user: User; 
 }
 
 @Resolver()
@@ -104,6 +107,7 @@ export class UserResolver {
 
     return {
       accessToken: createAccessToken(user),
+      user
     };
   }
 
@@ -113,5 +117,11 @@ export class UserResolver {
       .getRepository(User)
       .increment({ id: userId }, "tokenVersion", 1);
     return true;
+  }
+
+  @Mutation(() => Boolean)
+  async logout(@Ctx() {res}: ContextType) {
+    sendRefreshToken(res, ""); 
+    return true; 
   }
 }
