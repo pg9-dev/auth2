@@ -11,7 +11,6 @@ import {
 } from "type-graphql";
 import { hash, compare } from "bcryptjs";
 import { User } from "./entity/User";
-import "./utils/config.ts";
 import { ContextType } from "./ContextType";
 import { createAccessToken, createRefreshToken } from "./auth";
 import { isAuth } from "./isAuth";
