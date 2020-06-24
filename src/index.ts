@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import "dotenv/config";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
@@ -62,7 +63,6 @@ import { sendRefreshToken } from "./sendRefreshToken";
   });
 
   apolloServer.applyMiddleware({ app, cors: false });
-
   app.listen(8000, () => {
     console.log("express server started");
   });
