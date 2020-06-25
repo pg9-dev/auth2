@@ -114,6 +114,6 @@ mutation login {
 }
 ```
 
-#### Acknowledgement
+# Acknowledgement
 
-This project is based on tutorials by youtuber Ben Awad. Here is a link to Ben's channel, like, share and follow his channel to support him.
+This project is based on tutorials by youtuber Ben Awad. Here is a link to Ben's channel:https://www.youtube.com/user/99baddawg; like, share and follow his channel if you appreciate the content.
